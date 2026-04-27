@@ -1,0 +1,119 @@
+/* 게임 모드 스타일 */
+
+.game-setup {
+  text-align: center;
+  padding: 40px 24px;
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.difficulty-select {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+.diff-btn {
+  width: 90px;
+  height: 60px;
+  border-radius: var(--radius);
+  border: 2px solid var(--color-border);
+  background: var(--color-bg);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.diff-btn:hover  { border-color: var(--color-accent); }
+.diff-btn.active { border-color: var(--color-accent); background: var(--color-accent); color: #fff; }
+
+/* 게임 플레이 영역 */
+.game-area { }
+
+.game-hud {
+  display: flex;
+  align-items: center;
+  background: var(--color-primary);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  margin-bottom: 8px;
+  gap: 16px;
+}
+.hud-score  { font-size: 1rem; flex: 1; }
+.hud-lives  { font-size: 1.1rem; letter-spacing: 3px; }
+
+.game-field {
+  background: #1a252f;
+  border-radius: var(--radius);
+  height: 380px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #2c3e50;
+}
+
+/* 낙하 단어 */
+.falling-word {
+  position: absolute;
+  top: -8%;
+  background: rgba(52, 152, 219, 0.15);
+  border: 1px solid rgba(52, 152, 219, 0.5);
+  color: #ecf0f1;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  animation: fall linear forwards;
+  cursor: default;
+  user-select: none;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+/* 부분 일치 하이라이트 */
+.falling-word.partial {
+  background: rgba(241, 196, 15, 0.25);
+  border-color: rgba(241, 196, 15, 0.8);
+  color: #f1c40f;
+}
+
+/* 제거 애니메이션 */
+.falling-word.destroyed {
+  animation: destroy 0.3s ease forwards;
+}
+
+@keyframes fall {
+  from { top: -8%; }
+  to   { top: 105%; }
+}
+
+@keyframes destroy {
+  0%   { opacity: 1; transform: scale(1); }
+  50%  { opacity: 1; transform: scale(1.3); }
+  100% { opacity: 0; transform: scale(0); }
+}
+
+/* 바닥 라인 */
+.game-baseline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(231, 76, 60, 0.4);
+  transition: background 0.1s;
+}
+.game-baseline.flash {
+  background: rgba(231, 76, 60, 1);
+  box-shadow: 0 0 12px rgba(231, 76, 60, 0.8);
+}
+
+/* 게임 입력 */
+.game-input {
+  font-size: 1.1rem;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
