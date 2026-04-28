@@ -1,3 +1,33 @@
+/* 타자 검정 — 지문 선택 */
+.passage-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.passage-card {
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+}
+.passage-card:hover { border-color: var(--color-accent); }
+.passage-card.active { border-color: var(--color-accent); background: rgba(52,152,219,0.07); }
+.passage-card-title { display: block; font-size: 0.88rem; font-weight: 700; margin-bottom: 3px; }
+.passage-card-author { display: block; font-size: 0.76rem; color: var(--color-text-muted); }
+
+.exam-passage-info {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+  font-style: italic;
+}
+
 /* 자리 연습 */
 .lesson-grid {
   display: grid;

@@ -66,16 +66,9 @@ export function getRandomSentence(category = null) {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
-export function getExamText(durationMinutes = 1) {
-  const all = SENTENCES.filter(s => s.level >= 2);
-  const shuffled = [...all].sort(() => Math.random() - 0.5);
-  const targetLength = durationMinutes * 300;
-  let text = '', i = 0;
-  while (text.length < targetLength) {
-    text += shuffled[i % shuffled.length].text + ' ';
-    i++;
-  }
-  return text.trim();
+export function getExamText(durationMinutes = 1, passageId = null) {
+  const passage = getExamPassage('ko', passageId);
+  return _buildExamText(passage.text, durationMinutes * 300);
 }
 
 // 영문 문장 데이터
@@ -132,14 +125,79 @@ export function getRandomSentenceEn(category = null) {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
-export function getExamTextEn(durationMinutes = 1) {
-  const all = SENTENCES_EN.filter(s => s.level >= 2);
-  const shuffled = [...all].sort(() => Math.random() - 0.5);
-  const targetLength = durationMinutes * 250; // 영문 분당 약 250자 기준
-  let text = '', i = 0;
-  while (text.length < targetLength) {
-    text += shuffled[i % shuffled.length].text + ' ';
-    i++;
-  }
+export function getExamTextEn(durationMinutes = 1, passageId = null) {
+  const passage = getExamPassage('en', passageId);
+  return _buildExamText(passage.text, durationMinutes * 250);
+}
+
+function _buildExamText(baseText, targetLength) {
+  let text = baseText;
+  while (text.length < targetLength) text += ' ' + baseText;
   return text.trim();
+}
+
+export const EXAM_PASSAGES_KO = [
+  {
+    id: 'ko1',
+    title: '메밀꽃 필 무렵',
+    author: '이효석',
+    text: '길은 지금 긴 산허리에 걸려 있다. 밤중을 지난 무렵인지 죽은 듯이 고요한 속에서 짐승 같은 달의 숨소리가 손에 잡힐 듯이 들리며, 콩포기와 옥수수 잎새가 한층 달에 푸르게 젖었다. 산허리는 온통 메밀밭이어서 피기 시작한 꽃이 소금을 뿌린 듯이 흐뭇한 달빛에 숨이 막힐 지경이다. 붉은 대궁이 향기같이 애잔하고 나귀들의 걸음도 시원하다. 길이 좁은 까닭에 세 사람은 나귀를 타고 외줄로 늘어섰다. 방울 소리가 시원스럽게 딸랑딸랑 메밀밭께로 흘러간다.',
+  },
+  {
+    id: 'ko2',
+    title: '운수 좋은 날',
+    author: '현진건',
+    text: '새침하게 흐린 품이 눈이 올 듯하더니 눈은 아니 오고 얼다가 만 비가 추적추적 내리었다. 이날이야말로 동소문 안에서 인력거꾼 노릇을 하는 김 첨지의 운수가 좋았다. 재수가 옴 붙어서 근 열흘 동안 돈 구경도 못한 그가, 오늘은 예전에 없이 손님이 많았다. 첫째 번은 십 전짜리 손님이요, 둘째 번도 십 전짜리 손님이더니, 셋째 번에는 삼십 전짜리 손님이었다. 그것도 아침 댓바람에 벌어드린 것이다.',
+  },
+  {
+    id: 'ko3',
+    title: '서시 · 별 헤는 밤',
+    author: '윤동주',
+    text: '죽는 날까지 하늘을 우러러 한 점 부끄럼이 없기를, 잎새에 이는 바람에도 나는 괴로워했다. 별을 노래하는 마음으로 모든 죽어가는 것을 사랑해야지. 그리고 나한테 주어진 길을 걸어가야겠다. 오늘 밤에도 별이 바람에 스치운다. 계절이 지나가는 하늘에는 가을로 가득 차 있습니다. 나는 아무 걱정도 없이 가을 속의 별들을 다 헬 듯합니다. 가슴속에 하나 둘 새겨지는 별을 이제 다 못 헤는 것은 쉬이 아침이 오는 까닭이요, 내일 밤이 남은 까닭이요, 아직 나의 청춘이 다하지 않은 까닭입니다.',
+  },
+  {
+    id: 'ko4',
+    title: '진달래꽃',
+    author: '김소월',
+    text: '나 보기가 역겨워 가실 때에는 말없이 고이 보내 드리오리다. 영변에 약산 진달래꽃 아름 따다 가실 길에 뿌리오리다. 가시는 걸음걸음 놓인 그 꽃을 사뿐히 즈려밟고 가시옵소서. 나 보기가 역겨워 가실 때에는 죽어도 아니 눈물 흘리오리다.',
+  },
+  {
+    id: 'ko5',
+    title: '날개',
+    author: '이상',
+    text: '박제가 되어 버린 천재를 아시오. 나는 유쾌하오. 이런 때 연애까지가 유쾌하오. 육신이 흐느적흐느적하도록 피로했을 때만 정신이 은화처럼 맑소. 니코틴이 내 횟배 앓는 뱃속으로 스미면 머릿속에 으레 백지가 준비되는 법이오. 그 위에다 나는 위트와 파라독스를 바둑 포석처럼 늘어놓소. 가증할 상식의 병이오.',
+  },
+];
+
+export const EXAM_PASSAGES_EN = [
+  {
+    id: 'en1',
+    title: 'The Gift of the Magi',
+    author: 'O. Henry',
+    text: 'One dollar and eighty-seven cents. That was all. And sixty cents of it was in pennies. Pennies saved one and two at a time by bulldozing the grocer and the vegetable man and the butcher until one\'s cheeks burned with the silent imputation of parsimony that such close dealing implied. Three times Della counted it. One dollar and eighty-seven cents. And the next day would be Christmas.',
+  },
+  {
+    id: 'en2',
+    title: 'The Tell-Tale Heart',
+    author: 'Edgar Allan Poe',
+    text: 'True! nervous, very, very dreadfully nervous I had been and am; but why will you say that I am mad? The disease had sharpened my senses, not destroyed, not dulled them. Above all was the sense of hearing acute. I heard all things in the heaven and in the earth. I heard many things in hell. How, then, am I mad? Hearken! and observe how healthily, how calmly I can tell you the whole story.',
+  },
+  {
+    id: 'en3',
+    title: 'The Call of the Wild',
+    author: 'Jack London',
+    text: 'Buck did not read the newspapers, or he would have known that trouble was brewing, not alone for himself, but for every tide-water dog, strong of muscle and warm, long hair, from Puget Sound to San Diego. Because men, groping in the Arctic darkness, had found a yellow metal, and because steamship and transportation companies were booming the find, thousands of men were rushing into the Northland.',
+  },
+  {
+    id: 'en4',
+    title: 'Pride and Prejudice',
+    author: 'Jane Austen',
+    text: 'It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife. However little known the feelings or views of such a man may be on his first entering a neighbourhood, this truth is so well fixed in the minds of the surrounding families, that he is considered as the rightful property of some one or other of their daughters.',
+  },
+];
+
+export function getExamPassage(lang = 'ko', passageId = null) {
+  const passages = lang === 'en' ? EXAM_PASSAGES_EN : EXAM_PASSAGES_KO;
+  if (passageId) return passages.find(p => p.id === passageId) || passages[0];
+  return passages[Math.floor(Math.random() * passages.length)];
 }

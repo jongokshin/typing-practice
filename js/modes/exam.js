@@ -1,4 +1,4 @@
-import { getExamText, getExamTextEn } from '../data/sentences.js';
+import { getExamText, getExamTextEn, getExamPassage, EXAM_PASSAGES_KO, EXAM_PASSAGES_EN } from '../data/sentences.js';
 import { IMEHandler } from '../core/ime.js';
 import { TypingEngine } from '../core/typing-engine.js';
 import { TextDisplay } from '../components/text-display.js';
@@ -11,13 +11,17 @@ let ime = null, engine = null, textDisplay = null, countdown = null;
 let selectedDuration = 1, examStarted = false;
 let totalInput = '';
 let lang = 'ko';
+let selectedPassageId = null;
 
 export function init(container) {
   lang = localStorage.getItem('typing_lang') || 'ko';
+  selectedPassageId = null;
   renderSetup(container);
 }
 
 function renderSetup(container) {
+  const passages = lang === 'en' ? EXAM_PASSAGES_EN : EXAM_PASSAGES_KO;
+
   container.innerHTML = `
     <div class="mode-header">
       <h2>타자 검정</h2>
@@ -25,6 +29,20 @@ function renderSetup(container) {
     <p class="mode-desc">제한 시간 동안 타수와 정확도를 측정합니다.</p>
 
     <div id="exam-setup" class="exam-setup">
+      <h3>지문 선택</h3>
+      <div class="passage-cards" id="exam-passage-cards">
+        <button class="passage-card active" data-pid="">
+          <span class="passage-card-title">랜덤</span>
+          <span class="passage-card-author">매번 다른 지문</span>
+        </button>
+        ${passages.map(p => `
+          <button class="passage-card" data-pid="${p.id}">
+            <span class="passage-card-title">${p.title}</span>
+            <span class="passage-card-author">${p.author}</span>
+          </button>
+        `).join('')}
+      </div>
+
       <h3>시험 시간 선택</h3>
       <div class="duration-select">
         <button class="duration-btn active" data-min="1">1분</button>
@@ -45,6 +63,7 @@ function renderSetup(container) {
           <span>정확도: <strong id="exam-acc">100.0</strong>%</span>
         </div>
       </div>
+      <div id="exam-passage-info" class="exam-passage-info"></div>
       <div id="exam-text-display" class="text-display exam-text-display"></div>
       <input id="exam-input" class="typing-input" autocomplete="off"
              autocorrect="off" autocapitalize="off" spellcheck="false"
@@ -69,6 +88,14 @@ function renderSetup(container) {
     </div>
   `;
 
+  container.querySelector('#exam-passage-cards').addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-pid]');
+    if (!btn) return;
+    container.querySelectorAll('.passage-card').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedPassageId = btn.dataset.pid || null;
+  });
+
   container.querySelector('.duration-select').addEventListener('click', (e) => {
     const btn = e.target.closest('[data-min]');
     if (!btn) return;
@@ -85,7 +112,10 @@ function startExam(container) {
   examStarted = false;
   totalInput = '';
 
-  const text = lang === 'en' ? getExamTextEn(selectedDuration) : getExamText(selectedDuration);
+  const text = lang === 'en' ? getExamTextEn(selectedDuration, selectedPassageId) : getExamText(selectedDuration, selectedPassageId);
+  const passage = getExamPassage(lang, selectedPassageId);
+  const infoEl = area.querySelector('#exam-passage-info');
+  if (infoEl) infoEl.textContent = `${passage.title}  —  ${passage.author}`;
 
   container.querySelector('#exam-setup').classList.add('hidden');
   container.querySelector('#exam-result').classList.add('hidden');
