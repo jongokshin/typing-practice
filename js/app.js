@@ -55,6 +55,9 @@ function initResults(container) {
     ${fbReady ? `
     <div id="tab-ranking" class="tab-panel ${fbReady ? 'active' : 'hidden'}">
       <div class="ranking-filter">
+        <button class="lang-filter-btn ${(localStorage.getItem('typing_lang')||'ko')==='ko' ? 'active' : ''}" data-lang="ko">한글</button>
+        <button class="lang-filter-btn ${(localStorage.getItem('typing_lang')||'ko')==='en' ? 'active' : ''}" data-lang="en">English</button>
+        <span class="filter-sep">|</span>
         <button class="filter-btn active" data-dur="all">전체</button>
         <button class="filter-btn" data-dur="1">1분</button>
         <button class="filter-btn" data-dur="3">3분</button>
@@ -114,26 +117,37 @@ function initResults(container) {
 
   // 랭킹 필터
   let currentDur = null;
-  const loadRanking = async (duration) => {
-    currentDur = duration;
+  let currentLang = localStorage.getItem('typing_lang') || 'ko';
+
+  const loadRanking = async (duration, lang) => {
+    currentDur  = duration;
+    currentLang = lang;
     const wrap = container.querySelector('#ranking-table-wrap');
     wrap.innerHTML = '<div class="loading-msg">불러오는 중...</div>';
-    const rows = await getLeaderboard(duration);
+    const rows = await getLeaderboard(duration, lang);
     wrap.innerHTML = renderRankingTable(rows);
   };
+
+  container.querySelectorAll('.lang-filter-btn').forEach(btn => {
+    btn.onclick = () => {
+      container.querySelectorAll('.lang-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadRanking(currentDur, btn.dataset.lang);
+    };
+  });
 
   container.querySelectorAll('.filter-btn').forEach(btn => {
     btn.onclick = () => {
       container.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      loadRanking(btn.dataset.dur === 'all' ? null : parseInt(btn.dataset.dur));
+      loadRanking(btn.dataset.dur === 'all' ? null : parseInt(btn.dataset.dur), currentLang);
     };
   });
 
-  container.querySelector('#ranking-refresh-btn').onclick = () => loadRanking(currentDur);
+  container.querySelector('#ranking-refresh-btn').onclick = () => loadRanking(currentDur, currentLang);
 
   // 초기 로드
-  loadRanking(null);
+  loadRanking(null, currentLang);
 }
 
 function renderRankingTable(rows) {
@@ -171,3 +185,22 @@ const router = new Router([
   { path: '/game',     viewId: 'view-game',     init: game.init,     destroy: game.destroy },
   { path: '/results',  viewId: 'view-results',  init: initResults },
 ]);
+
+// 헤더 언어 전환
+(function() {
+  const savedLang = localStorage.getItem('typing_lang') || 'ko';
+  document.querySelectorAll('.header-lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === savedLang);
+  });
+  document.getElementById('header-lang-toggle').addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-lang]');
+    if (!btn) return;
+    const newLang = btn.dataset.lang;
+    if (newLang === (localStorage.getItem('typing_lang') || 'ko')) return;
+    localStorage.setItem('typing_lang', newLang);
+    document.querySelectorAll('.header-lang-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.lang === newLang);
+    });
+    router.reload();
+  });
+})();

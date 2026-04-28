@@ -47,4 +47,8 @@ export class Router {
   go(path) {
     location.hash = '#' + path;
   }
+
+  reload() {
+    this._navigate();
+  }
 }

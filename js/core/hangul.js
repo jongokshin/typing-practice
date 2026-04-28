@@ -45,10 +45,16 @@ export function countJaso(text) {
   return count;
 }
 
-// 타/분 계산
+// 한국어 타/분 계산 (자소 기준)
 export function calcTypingSpeed(jasoCount, elapsedSeconds) {
   if (elapsedSeconds <= 0) return 0;
   return Math.round((jasoCount / elapsedSeconds) * 60);
+}
+
+// 영문 타/분 계산 (1글자 = 1타, 한국어와 동일 방식)
+export function calcEnglishSpeed(correctChars, elapsedSeconds) {
+  if (elapsedSeconds <= 0) return 0;
+  return Math.round((correctChars / elapsedSeconds) * 60);
 }
 
 // 정확도 계산: 입력된 글자 중 맞은 비율

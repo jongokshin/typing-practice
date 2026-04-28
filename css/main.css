@@ -67,6 +67,20 @@ body {
 .nav-item:hover  { color: #fff; background: rgba(255,255,255,0.1); }
 .nav-item.active { color: #fff; background: var(--color-accent); }
 
+.header-lang-toggle { display: flex; gap: 4px; margin-left: auto; align-items: center; flex-shrink: 0; }
+.header-lang-btn {
+  padding: 4px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.header-lang-btn:hover  { color: #fff; border-color: rgba(255,255,255,0.7); }
+.header-lang-btn.active { background: var(--color-accent); border-color: var(--color-accent); color: #fff; font-weight: 600; }
+
 /* 뷰 */
 #view-container { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
 
@@ -127,8 +141,8 @@ body {
 .recent-date { width: 100px; text-align: right; color: var(--color-text-muted); }
 
 /* 모드 헤더 */
-.mode-header { margin-bottom: 24px; }
-.mode-header h2 { font-size: 1.6rem; margin-bottom: 4px; }
+.mode-header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+.mode-header h2 { flex: 1; font-size: 1.6rem; margin-bottom: 0; }
 .mode-desc { color: var(--color-text-muted); }
 
 /* 버튼 공통 */
@@ -268,8 +282,6 @@ body {
 }
 
 /* 기록 테이블 */
-.mode-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-.mode-header h2 { flex: 1; }
 .scores-table-wrap { overflow-x: auto; }
 .scores-table { width: 100%; border-collapse: collapse; background: var(--color-surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
 .scores-table th { background: var(--color-primary); color: #fff; padding: 10px 16px; font-size: 0.88rem; text-align: left; }
@@ -401,6 +413,21 @@ body {
 }
 .filter-btn:hover  { border-color: var(--color-accent); }
 .filter-btn.active { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+
+.lang-filter-btn {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+}
+.lang-filter-btn:hover  { border-color: var(--color-primary); }
+.lang-filter-btn.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+
+.filter-sep { color: var(--color-border); font-size: 1.1rem; padding: 0 2px; }
 
 .loading-msg   { text-align: center; padding: 32px; color: var(--color-text-muted); }
 .empty-ranking { text-align: center; padding: 32px; color: var(--color-text-muted); }

@@ -35,9 +35,10 @@ export class StatsDisplay {
     this._progress = this._container.querySelector('#stat-progress');
   }
 
-  update({ wpm = 0, accuracy = 100, elapsed = 0, inputLength = 0, targetLength = 1 } = {}) {
+  update({ wpm = 0, accuracy = 100, elapsed = 0, inputLength = 0, targetLength = 1, lang = 'ko' } = {}) {
     this._wpm.textContent      = wpm;
     this._accuracy.textContent = accuracy.toFixed(1);
+    this._wpm.nextElementSibling.textContent = '타/분';
     this._time.textContent     = formatTime(elapsed);
     const pct = targetLength > 0 ? Math.round((inputLength / targetLength) * 100) : 0;
     this._progress.textContent = Math.min(100, pct);

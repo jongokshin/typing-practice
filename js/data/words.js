@@ -43,8 +43,52 @@ export function getRandomWords(level, count = 20) {
   const list = [...WORD_LIST[level]];
   const result = [];
   for (let i = 0; i < count; i++) {
-    const idx = Math.floor(Math.random() * list.length);
-    result.push(list[idx]);
+    result.push(list[Math.floor(Math.random() * list.length)]);
+  }
+  return result;
+}
+
+// 영문 단어 목록
+export const WORD_LIST_EN = {
+  easy: [
+    'the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'had',
+    'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his',
+    'how', 'man', 'new', 'now', 'old', 'see', 'two', 'way', 'who', 'boy',
+    'did', 'its', 'let', 'put', 'say', 'she', 'too', 'use', 'cat', 'dog',
+    'sun', 'sky', 'run', 'big', 'red', 'hot', 'fun', 'top', 'cup', 'map',
+    'bed', 'car', 'fly', 'job', 'key', 'mix', 'net', 'odd', 'pan', 'raw',
+  ],
+  medium: [
+    'water', 'world', 'think', 'after', 'about', 'might', 'right', 'place',
+    'never', 'again', 'still', 'every', 'great', 'small', 'those', 'under',
+    'years', 'being', 'found', 'leave', 'light', 'means', 'other', 'point',
+    'start', 'state', 'study', 'three', 'their', 'there', 'these', 'thing',
+    'which', 'while', 'white', 'whole', 'where', 'write', 'young', 'above',
+    'bring', 'build', 'check', 'clear', 'drive', 'email', 'enjoy', 'event',
+  ],
+  hard: [
+    'beautiful', 'different', 'important', 'knowledge', 'mountain', 'absolute',
+    'adventure', 'carefully', 'celebrate', 'community', 'computer', 'confident',
+    'dangerous', 'education', 'excellent', 'executive', 'following', 'frequency',
+    'generally', 'highlight', 'immediate', 'influence', 'interview', 'introduce',
+    'javascript', 'knowledge', 'landscape', 'magazine', 'necessary', 'objective',
+    'paragraph', 'perfectly', 'practical', 'president', 'principle', 'professor',
+    'recommend', 'reference', 'represent', 'resources', 'shoulders', 'signature',
+    'situation', 'statement', 'structure', 'surprised', 'technical', 'telephone',
+  ],
+};
+
+export const WORD_CATEGORIES_EN = [
+  { id: 'easy',   label: 'Easy',   count: WORD_LIST_EN.easy.length },
+  { id: 'medium', label: 'Medium', count: WORD_LIST_EN.medium.length },
+  { id: 'hard',   label: 'Hard',   count: WORD_LIST_EN.hard.length },
+];
+
+export function getRandomWordsEn(level, count = 20) {
+  const list = [...WORD_LIST_EN[level]];
+  const result = [];
+  for (let i = 0; i < count; i++) {
+    result.push(list[Math.floor(Math.random() * list.length)]);
   }
   return result;
 }

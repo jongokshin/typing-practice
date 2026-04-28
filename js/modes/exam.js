@@ -1,4 +1,4 @@
-import { getExamText } from '../data/sentences.js';
+import { getExamText, getExamTextEn } from '../data/sentences.js';
 import { IMEHandler } from '../core/ime.js';
 import { TypingEngine } from '../core/typing-engine.js';
 import { TextDisplay } from '../components/text-display.js';
@@ -10,13 +10,19 @@ import { isFirebaseConfigured } from '../services/firebase.js';
 let ime = null, engine = null, textDisplay = null, countdown = null;
 let selectedDuration = 1, examStarted = false;
 let totalInput = '';
+let lang = 'ko';
 
 export function init(container) {
+  lang = localStorage.getItem('typing_lang') || 'ko';
+  renderSetup(container);
+}
+
+function renderSetup(container) {
   container.innerHTML = `
     <div class="mode-header">
       <h2>타자 검정</h2>
-      <p class="mode-desc">제한 시간 동안 타수와 정확도를 측정합니다.</p>
     </div>
+    <p class="mode-desc">제한 시간 동안 타수와 정확도를 측정합니다.</p>
 
     <div id="exam-setup" class="exam-setup">
       <h3>시험 시간 선택</h3>
@@ -35,7 +41,7 @@ export function init(container) {
           <span id="exam-timer" class="exam-timer">01:00</span>
         </div>
         <div class="exam-live-stats">
-          <span>타수: <strong id="exam-wpm">0</strong> 타/분</span>
+          <span>타수: <strong id="exam-wpm">0</strong> <span id="exam-wpm-unit">타/분</span></span>
           <span>정확도: <strong id="exam-acc">100.0</strong>%</span>
         </div>
       </div>
@@ -79,7 +85,7 @@ function startExam(container) {
   examStarted = false;
   totalInput = '';
 
-  const text = getExamText(selectedDuration);
+  const text = lang === 'en' ? getExamTextEn(selectedDuration) : getExamText(selectedDuration);
 
   container.querySelector('#exam-setup').classList.add('hidden');
   container.querySelector('#exam-result').classList.add('hidden');
@@ -88,11 +94,13 @@ function startExam(container) {
 
   textDisplay = new TextDisplay(area.querySelector('#exam-text-display'));
   textDisplay.setTarget(text);
-  engine = new TypingEngine(text);
+  engine = new TypingEngine(text, lang);
 
-  const timerEl = area.querySelector('#exam-timer');
-  const wpmEl   = area.querySelector('#exam-wpm');
-  const accEl   = area.querySelector('#exam-acc');
+  const timerEl    = area.querySelector('#exam-timer');
+  const wpmEl      = area.querySelector('#exam-wpm');
+  const accEl      = area.querySelector('#exam-acc');
+  const wpmUnitEl  = area.querySelector('#exam-wpm-unit');
+  if (wpmUnitEl) wpmUnitEl.textContent = '타/분';
 
   countdown = new CountdownTimer(
     selectedDuration * 60,
@@ -139,6 +147,7 @@ function endExam(container) {
 
   ScoreStore.save({
     mode: 'exam',
+    lang,
     duration: selectedDuration,
     wpm: stats.wpm,
     accuracy: stats.accuracy,
@@ -152,6 +161,7 @@ function endExam(container) {
 }
 
 function showResult(container, stats) {
+  const wpmUnit  = '타/분';
   const resultEl = container.querySelector('#exam-result');
   resultEl.classList.remove('hidden');
 
@@ -164,7 +174,7 @@ function showResult(container, stats) {
       <div class="result-stats">
         <div class="result-stat main">
           <span class="r-label">타수</span>
-          <span class="r-value big">${stats.wpm}<small>타/분</small></span>
+          <span class="r-value big">${stats.wpm}<small>${wpmUnit}</small></span>
         </div>
         <div class="result-stat main">
           <span class="r-label">정확도</span>
@@ -181,7 +191,7 @@ function showResult(container, stats) {
         ${best ? `
         <div class="result-stat">
           <span class="r-label">내 최고 기록</span>
-          <span class="r-value">${best.wpm}타/분</span>
+          <span class="r-value">${best.wpm}${wpmUnit}</span>
         </div>` : ''}
       </div>
       <div id="ranking-result-msg" class="ranking-result-msg"></div>
@@ -205,8 +215,8 @@ function showResult(container, stats) {
 }
 
 function openNicknameModal(container, stats) {
-  const modal   = container.querySelector('#nickname-modal');
-  const input   = container.querySelector('#nickname-input');
+  const modal    = container.querySelector('#nickname-modal');
+  const input    = container.querySelector('#nickname-input');
   const feedback = container.querySelector('#nickname-feedback');
   const submitBtn = container.querySelector('#nickname-submit-btn');
   const cancelBtn = container.querySelector('#nickname-cancel-btn');
@@ -235,6 +245,7 @@ function openNicknameModal(container, stats) {
       wpm: stats.wpm,
       accuracy: stats.accuracy,
       duration: selectedDuration,
+      lang,
     });
 
     submitBtn.disabled = false;

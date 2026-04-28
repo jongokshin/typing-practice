@@ -67,13 +67,76 @@ export function getRandomSentence(category = null) {
 }
 
 export function getExamText(durationMinutes = 1) {
-  // 검정용 긴 문장 조합
-  const examSentences = SENTENCES.filter(s => s.category === '검정');
   const all = SENTENCES.filter(s => s.level >= 2);
   const shuffled = [...all].sort(() => Math.random() - 0.5);
-  const targetLength = durationMinutes * 300; // 분당 약 300자 기준
-  let text = '';
-  let i = 0;
+  const targetLength = durationMinutes * 300;
+  let text = '', i = 0;
+  while (text.length < targetLength) {
+    text += shuffled[i % shuffled.length].text + ' ';
+    i++;
+  }
+  return text.trim();
+}
+
+// 영문 문장 데이터
+export const SENTENCES_EN = [
+  // Quotes
+  { id: 'e001', category: 'Quotes', level: 1, text: 'The quick brown fox jumps over the lazy dog.' },
+  { id: 'e002', category: 'Quotes', level: 1, text: 'Practice makes perfect.' },
+  { id: 'e003', category: 'Quotes', level: 1, text: 'Every day is a new beginning.' },
+  { id: 'e004', category: 'Quotes', level: 2, text: 'The only way to do great work is to love what you do.' },
+  { id: 'e005', category: 'Quotes', level: 2, text: 'In the middle of every difficulty lies opportunity.' },
+  { id: 'e006', category: 'Quotes', level: 2, text: 'It does not matter how slowly you go as long as you do not stop.' },
+  { id: 'e007', category: 'Quotes', level: 3, text: 'The future belongs to those who believe in the beauty of their dreams.' },
+  { id: 'e008', category: 'Quotes', level: 3, text: 'Success is not final, failure is not fatal: it is the courage to continue that counts.' },
+
+  // Proverbs
+  { id: 'e101', category: 'Proverbs', level: 1, text: 'Actions speak louder than words.' },
+  { id: 'e102', category: 'Proverbs', level: 1, text: 'Better late than never.' },
+  { id: 'e103', category: 'Proverbs', level: 1, text: 'Look before you leap.' },
+  { id: 'e104', category: 'Proverbs', level: 2, text: 'A journey of a thousand miles begins with a single step.' },
+  { id: 'e105', category: 'Proverbs', level: 2, text: 'You reap what you sow.' },
+  { id: 'e106', category: 'Proverbs', level: 2, text: 'Where there is a will, there is a way.' },
+  { id: 'e107', category: 'Proverbs', level: 3, text: 'The early bird catches the worm, but the second mouse gets the cheese.' },
+
+  // Nature
+  { id: 'e201', category: 'Nature', level: 1, text: 'The sky is blue and the grass is green.' },
+  { id: 'e202', category: 'Nature', level: 1, text: 'Spring brings flowers and warm sunshine.' },
+  { id: 'e203', category: 'Nature', level: 2, text: 'The mountains stand tall against the bright blue sky.' },
+  { id: 'e204', category: 'Nature', level: 2, text: 'Autumn leaves fall gently in shades of red and gold.' },
+  { id: 'e205', category: 'Nature', level: 3, text: 'The ocean waves crash against the rocky shore with tremendous force.' },
+
+  // Technology
+  { id: 'e301', category: 'Technology', level: 2, text: 'The internet connects people all around the world.' },
+  { id: 'e302', category: 'Technology', level: 2, text: 'Artificial intelligence is changing how we work and live.' },
+  { id: 'e303', category: 'Technology', level: 3, text: 'Programming requires logical thinking and attention to detail.' },
+  { id: 'e304', category: 'Technology', level: 3, text: 'Machine learning algorithms can recognize patterns in large datasets.' },
+
+  // Daily Life
+  { id: 'e401', category: 'Daily Life', level: 1, text: 'I wake up early and exercise every morning.' },
+  { id: 'e402', category: 'Daily Life', level: 1, text: 'Reading books expands your knowledge and vocabulary.' },
+  { id: 'e403', category: 'Daily Life', level: 2, text: 'Cooking a healthy meal for your family is very rewarding.' },
+  { id: 'e404', category: 'Daily Life', level: 2, text: 'Regular exercise and a balanced diet are key to good health.' },
+  { id: 'e405', category: 'Daily Life', level: 3, text: 'Maintaining a positive attitude helps you overcome challenges in daily life.' },
+
+  // Exam (long passages)
+  { id: 'e501', category: 'Exam', level: 2, text: 'The ability to type quickly and accurately is an essential skill in the modern workplace. With practice and dedication, anyone can improve their typing speed significantly.' },
+  { id: 'e502', category: 'Exam', level: 3, text: 'Technology has transformed the way we communicate, work, and learn. Computers and smartphones have become indispensable tools in our daily lives, connecting us to information and to each other across the globe.' },
+  { id: 'e503', category: 'Exam', level: 3, text: 'Developing good typing habits from the beginning is crucial. Keep your fingers on the home row keys, maintain proper posture, and focus on accuracy before trying to increase your speed.' },
+];
+
+export const SENTENCE_CATEGORIES_EN = ['Quotes', 'Proverbs', 'Nature', 'Technology', 'Daily Life', 'Exam'];
+
+export function getRandomSentenceEn(category = null) {
+  const pool = category ? SENTENCES_EN.filter(s => s.category === category) : SENTENCES_EN;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+export function getExamTextEn(durationMinutes = 1) {
+  const all = SENTENCES_EN.filter(s => s.level >= 2);
+  const shuffled = [...all].sort(() => Math.random() - 0.5);
+  const targetLength = durationMinutes * 250; // 영문 분당 약 250자 기준
+  let text = '', i = 0;
   while (text.length < targetLength) {
     text += shuffled[i % shuffled.length].text + ' ';
     i++;

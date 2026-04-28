@@ -1,9 +1,10 @@
-import { countJaso, calcTypingSpeed, calcAccuracy, compareTexts } from './hangul.js';
+import { countJaso, calcTypingSpeed, calcEnglishSpeed, calcAccuracy } from './hangul.js';
 import { Timer } from './timer.js';
 
 export class TypingEngine {
-  constructor(targetText) {
+  constructor(targetText, lang = 'ko') {
     this.target = targetText;
+    this.lang = lang;
     this.targetLen = [...targetText].length;
 
     this._timer = new Timer(() => {});
@@ -24,8 +25,9 @@ export class TypingEngine {
     this._finished = true;
   }
 
-  reset(newTarget = null) {
+  reset(newTarget = null, lang = null) {
     if (newTarget) this.target = newTarget;
+    if (lang) this.lang = lang;
     this.targetLen = [...this.target].length;
     this._timer.reset();
     this._startedAt = null;
@@ -78,13 +80,18 @@ export class TypingEngine {
         .join('')
     );
 
+    const wpm = this.lang === 'en'
+      ? calcEnglishSpeed(correctCount, elapsed)
+      : calcTypingSpeed(correctJaso, elapsed);
+
     return {
-      wpm: calcTypingSpeed(correctJaso, elapsed),
+      wpm,
       accuracy: calcAccuracy(inputText, this.target),
       elapsed,
       inputLength: inputChars.length,
       targetLength: this.targetLen,
       correctChars: correctCount,
+      lang: this.lang,
     };
   }
 
