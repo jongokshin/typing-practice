@@ -112,15 +112,15 @@ function startExam(container) {
   examStarted = false;
   totalInput = '';
 
-  const text = lang === 'en' ? getExamTextEn(selectedDuration, selectedPassageId) : getExamText(selectedDuration, selectedPassageId);
-  const passage = getExamPassage(lang, selectedPassageId);
-  const infoEl = area.querySelector('#exam-passage-info');
-  if (infoEl) infoEl.textContent = `${passage.title}  —  ${passage.author}`;
-
   container.querySelector('#exam-setup').classList.add('hidden');
   container.querySelector('#exam-result').classList.add('hidden');
   const area = container.querySelector('#exam-area');
   area.classList.remove('hidden');
+
+  const text = lang === 'en' ? getExamTextEn(selectedDuration, selectedPassageId) : getExamText(selectedDuration, selectedPassageId);
+  const passage = getExamPassage(lang, selectedPassageId);
+  const infoEl = area.querySelector('#exam-passage-info');
+  if (infoEl) infoEl.textContent = `${passage.title}  —  ${passage.author}`;
 
   textDisplay = new TextDisplay(area.querySelector('#exam-text-display'));
   textDisplay.setTarget(text);
