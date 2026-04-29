@@ -74,7 +74,9 @@ export function init(cont) {
   container.querySelector('#game-start-btn').onclick = () => startGame();
   container.querySelector('#game-retry-btn').onclick = () => startGame();
   container.querySelector('#game-home-btn').onclick  = () => {
-    destroy();
+    stopGame();
+    fallingWords = [];
+    container.querySelector('#game-field').querySelectorAll('.falling-word').forEach(el => el.remove());
     container.querySelector('#game-over').classList.add('hidden');
     container.querySelector('#game-setup').classList.remove('hidden');
   };
