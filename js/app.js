@@ -70,7 +70,7 @@ function initResults(container) {
     </div>` : ''}
 
     <!-- 내 기록 탭 -->
-    <div id="tab-my" class="tab-panel ${fbReady ? 'hidden' : 'active'}">
+    <div id="tab-my" class="tab-panel ${fbReady ? '' : 'active'}">
       ${bestExam ? `
       <div class="best-record-card">
         <span class="best-label">타자 검정 최고 기록</span>
